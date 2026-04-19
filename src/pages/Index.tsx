@@ -195,8 +195,8 @@ export default function Index() {
     <div className="min-h-screen mesh-bg bg-background flex">
       {uploadOpen && <UploadModal onClose={() => setUploadOpen(false)} />}
 
-      {/* Sidebar */}
-      <aside className="w-64 flex-shrink-0 flex flex-col border-r border-border/50 relative">
+      {/* Sidebar — только десктоп */}
+      <aside className="hidden md:flex w-64 flex-shrink-0 flex-col border-r border-border/50 relative">
         <div className="absolute inset-0 bg-gradient-to-b from-purple-900/10 to-transparent pointer-events-none" />
 
         {/* Logo */}
@@ -251,11 +251,18 @@ export default function Index() {
       </aside>
 
       {/* Main content */}
-      <main className="flex-1 overflow-auto">
+      <main className="flex-1 overflow-auto pb-20 md:pb-0">
 
         {/* Header */}
-        <header className="sticky top-0 z-10 flex items-center justify-between px-8 py-4 border-b border-border/50 backdrop-blur-xl bg-background/60">
-          <h1 className="font-montserrat font-bold text-xl text-white">
+        <header className="sticky top-0 z-10 flex items-center justify-between px-4 md:px-8 py-4 border-b border-border/50 backdrop-blur-xl bg-background/60">
+          {/* Мобильный логотип */}
+          <div className="flex items-center gap-2 md:hidden">
+            <div className="w-7 h-7 rounded-lg bg-gradient-to-br from-purple-500 to-cyan-400 flex items-center justify-center">
+              <Icon name="Headphones" size={14} className="text-white" />
+            </div>
+            <span className="font-montserrat font-extrabold text-base tracking-wider gradient-text">VENOK</span>
+          </div>
+          <h1 className="hidden md:block font-montserrat font-bold text-xl text-white">
             {activePage === "profile" && "Профиль исполнителя"}
             {activePage === "music" && "Управление музыкой"}
             {activePage === "distribution" && "Дистрибуция"}
@@ -272,24 +279,21 @@ export default function Index() {
           </div>
         </header>
 
-        <div className="p-8">
+        <div className="p-4 md:p-8">
 
           {/* ===== PROFILE ===== */}
           {activePage === "profile" && (
             <div className="space-y-6 animate-fade-in">
 
               {/* Hero Banner */}
-              <div className="relative rounded-2xl overflow-hidden h-56">
+              <div className="relative rounded-2xl overflow-hidden">
                 <div className="absolute inset-0 bg-gradient-to-br from-purple-900 via-indigo-900 to-cyan-900" />
                 <div className="absolute inset-0 bg-gradient-to-tr from-pink-600/20 via-transparent to-cyan-400/20" />
-                <div className="absolute inset-0 flex items-end p-8">
+                {/* Десктоп */}
+                <div className="hidden md:flex absolute inset-0 items-end p-8">
                   <div className="flex items-end gap-6">
                     <div className="relative">
-                      <img
-                        src={ARTIST_IMAGE}
-                        alt="Artist"
-                        className="w-28 h-28 rounded-2xl object-cover border-4 border-white/10 shadow-2xl shadow-purple-500/30"
-                      />
+                      <img src={ARTIST_IMAGE} alt="Artist" className="w-28 h-28 rounded-2xl object-cover border-4 border-white/10 shadow-2xl shadow-purple-500/30" />
                       <div className="absolute -bottom-1 -right-1 w-7 h-7 rounded-full bg-green-400 border-2 border-background flex items-center justify-center">
                         <div className="w-2 h-2 rounded-full bg-green-900" />
                       </div>
@@ -308,18 +312,33 @@ export default function Index() {
                     </div>
                   </div>
                   <div className="ml-auto flex gap-2">
-                    <button className="px-4 py-2 rounded-xl bg-white/10 hover:bg-white/15 transition-colors text-sm text-white font-medium backdrop-blur-sm border border-white/10">
-                      Редактировать
-                    </button>
-                    <button className="px-4 py-2 rounded-xl bg-gradient-to-r from-purple-600 to-cyan-500 text-white text-sm font-semibold btn-glow">
-                      Поделиться
-                    </button>
+                    <button className="px-4 py-2 rounded-xl bg-white/10 hover:bg-white/15 transition-colors text-sm text-white font-medium backdrop-blur-sm border border-white/10">Редактировать</button>
+                    <button className="px-4 py-2 rounded-xl bg-gradient-to-r from-purple-600 to-cyan-500 text-white text-sm font-semibold btn-glow">Поделиться</button>
                   </div>
                 </div>
+                {/* Мобильный */}
+                <div className="md:hidden flex flex-col items-center p-6 pt-8 pb-6 gap-3">
+                  <div className="relative">
+                    <img src={ARTIST_IMAGE} alt="Artist" className="w-24 h-24 rounded-2xl object-cover border-4 border-white/10 shadow-2xl shadow-purple-500/30" />
+                    <div className="absolute -bottom-1 -right-1 w-6 h-6 rounded-full bg-green-400 border-2 border-background" />
+                  </div>
+                  <div className="text-center">
+                    <div className="flex items-center justify-center gap-2 mb-1">
+                      <h2 className="font-montserrat font-bold text-2xl text-white">NOVA</h2>
+                      <span className="text-xs bg-purple-500/30 text-purple-300 border border-purple-500/40 px-2 py-0.5 rounded-full">Pro</span>
+                    </div>
+                    <p className="text-white/60 text-sm">Электронная музыка · Москва</p>
+                  </div>
+                  <div className="flex gap-2 w-full">
+                    <button className="flex-1 py-2 rounded-xl bg-white/10 text-sm text-white font-medium border border-white/10">Редактировать</button>
+                    <button className="flex-1 py-2 rounded-xl bg-gradient-to-r from-purple-600 to-cyan-500 text-white text-sm font-semibold">Поделиться</button>
+                  </div>
+                </div>
+                <div className="hidden md:block h-56" />
               </div>
 
               {/* Stats */}
-              <div className="grid grid-cols-4 gap-4">
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-4">
                 {[
                   { label: "Прослушивания", value: "531K", change: "+12%", icon: "Headphones" },
                   { label: "Подписчики", value: "14.2K", change: "+8%", icon: "Users" },
@@ -338,8 +357,8 @@ export default function Index() {
               </div>
 
               {/* Bio + Top tracks */}
-              <div className="grid grid-cols-5 gap-6">
-                <div className="col-span-2 card-glass rounded-2xl p-6 neon-border">
+              <div className="grid grid-cols-1 md:grid-cols-5 gap-4 md:gap-6">
+                <div className="md:col-span-2 card-glass rounded-2xl p-5 md:p-6 neon-border">
                   <h3 className="font-montserrat font-bold text-xs text-white/40 uppercase tracking-widest mb-4">О себе</h3>
                   <p className="text-white/70 text-sm leading-relaxed mb-4">
                     Электронный музыкант из Москвы. Создаю синти-поп и электронную музыку с 2018 года. Вдохновляюсь городской эстетикой и ночной жизнью.
@@ -361,7 +380,7 @@ export default function Index() {
                   </div>
                 </div>
 
-                <div className="col-span-3 card-glass rounded-2xl p-6 neon-border">
+                <div className="md:col-span-3 card-glass rounded-2xl p-5 md:p-6 neon-border">
                   <h3 className="font-montserrat font-bold text-xs text-white/40 uppercase tracking-widest mb-4">Топ треков</h3>
                   <div className="space-y-1">
                     {tracks.slice(0, 4).map((track, i) => (
@@ -395,15 +414,15 @@ export default function Index() {
             <div className="space-y-6 animate-fade-in">
 
               {/* Upload CTA */}
-              <div className="relative rounded-2xl overflow-hidden p-6 flex items-center justify-between"
+              <div className="relative rounded-2xl overflow-hidden p-5 md:p-6 flex flex-col md:flex-row items-start md:items-center justify-between gap-4"
                 style={{ background: "linear-gradient(135deg, rgba(168,85,247,0.2), rgba(0,255,255,0.1))", border: "1px solid rgba(168,85,247,0.3)" }}>
                 <div>
-                  <h2 className="font-montserrat font-bold text-2xl text-white mb-1">Загрузить новый трек</h2>
+                  <h2 className="font-montserrat font-bold text-xl md:text-2xl text-white mb-1">Загрузить новый трек</h2>
                   <p className="text-white/50 text-sm">MP3, WAV, FLAC · до 500 MB</p>
                 </div>
                 <button
                   onClick={() => setUploadOpen(true)}
-                  className="px-6 py-3 rounded-xl bg-gradient-to-r from-purple-600 to-cyan-500 text-white font-semibold btn-glow flex items-center gap-2"
+                  className="w-full md:w-auto px-6 py-3 rounded-xl bg-gradient-to-r from-purple-600 to-cyan-500 text-white font-semibold btn-glow flex items-center justify-center gap-2"
                 >
                   <Icon name="Upload" size={18} />
                   Загрузить
@@ -430,28 +449,41 @@ export default function Index() {
               {/* Tracks */}
               {musicTab === "tracks" && (
                 <div className="card-glass rounded-2xl overflow-hidden neon-border">
-                  <div className="grid grid-cols-[2rem_1fr_1fr_6rem_5rem_3rem] gap-4 px-6 py-3 text-xs font-semibold text-white/20 uppercase tracking-widest border-b border-white/5">
+                  {/* Десктоп заголовок */}
+                  <div className="hidden md:grid grid-cols-[2rem_1fr_1fr_6rem_5rem_3rem] gap-4 px-6 py-3 text-xs font-semibold text-white/20 uppercase tracking-widest border-b border-white/5">
                     <span>#</span><span>Название</span><span>Альбом</span><span>Жанр</span><span>Прослушиваний</span><span>Длина</span>
                   </div>
                   {tracks.map((track, i) => (
                     <div
                       key={track.id}
                       onClick={() => setPlayingTrack(playingTrack === track.id ? null : track.id)}
-                      className="track-row grid grid-cols-[2rem_1fr_1fr_6rem_5rem_3rem] gap-4 px-6 py-4 cursor-pointer border-b border-white/3 last:border-0 items-center"
+                      className="track-row border-b border-white/3 last:border-0 cursor-pointer"
                     >
-                      <span className="text-white/20 text-sm font-montserrat">{i + 1}</span>
-                      <div className="flex items-center gap-3 min-w-0">
-                        <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-purple-600 to-cyan-500 flex items-center justify-center flex-shrink-0">
-                          {playingTrack === track.id
-                            ? <WaveformIcon isActive />
-                            : <Icon name="Music2" size={14} className="text-white" />}
+                      {/* Десктоп строка */}
+                      <div className="hidden md:grid grid-cols-[2rem_1fr_1fr_6rem_5rem_3rem] gap-4 px-6 py-4 items-center">
+                        <span className="text-white/20 text-sm font-montserrat">{i + 1}</span>
+                        <div className="flex items-center gap-3 min-w-0">
+                          <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-purple-600 to-cyan-500 flex items-center justify-center flex-shrink-0">
+                            {playingTrack === track.id ? <WaveformIcon isActive /> : <Icon name="Music2" size={14} className="text-white" />}
+                          </div>
+                          <span className={`text-sm font-medium truncate ${playingTrack === track.id ? "gradient-text" : "text-white"}`}>{track.title}</span>
                         </div>
-                        <span className={`text-sm font-medium truncate ${playingTrack === track.id ? "gradient-text" : "text-white"}`}>{track.title}</span>
+                        <span className="text-sm text-white/40 truncate">{track.album}</span>
+                        <span className="text-xs text-purple-400 bg-purple-500/10 px-2 py-0.5 rounded-full w-fit">{track.genre}</span>
+                        <span className="text-sm text-white/40">{track.plays}</span>
+                        <span className="text-sm text-white/30">{track.duration}</span>
                       </div>
-                      <span className="text-sm text-white/40 truncate">{track.album}</span>
-                      <span className="text-xs text-purple-400 bg-purple-500/10 px-2 py-0.5 rounded-full w-fit">{track.genre}</span>
-                      <span className="text-sm text-white/40">{track.plays}</span>
-                      <span className="text-sm text-white/30">{track.duration}</span>
+                      {/* Мобильная строка */}
+                      <div className="md:hidden flex items-center gap-3 px-4 py-3">
+                        <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-purple-600 to-cyan-500 flex items-center justify-center flex-shrink-0">
+                          {playingTrack === track.id ? <WaveformIcon isActive /> : <Icon name="Music2" size={14} className="text-white" />}
+                        </div>
+                        <div className="flex-1 min-w-0">
+                          <p className={`text-sm font-medium truncate ${playingTrack === track.id ? "gradient-text" : "text-white"}`}>{track.title}</p>
+                          <p className="text-xs text-white/30">{track.album} · {track.duration}</p>
+                        </div>
+                        <span className="text-xs text-white/30">{track.plays}</span>
+                      </div>
                     </div>
                   ))}
                 </div>
@@ -459,7 +491,7 @@ export default function Index() {
 
               {/* Albums */}
               {musicTab === "albums" && (
-                <div className="grid grid-cols-3 gap-5">
+                <div className="grid grid-cols-2 md:grid-cols-3 gap-4 md:gap-5">
                   {albums.map((album) => (
                     <div key={album.id} className="card-glass rounded-2xl overflow-hidden neon-border hover:scale-[1.02] transition-transform duration-300 cursor-pointer group">
                       <div className={`h-40 bg-gradient-to-br ${album.color} flex items-center justify-center relative`}>
@@ -525,20 +557,20 @@ export default function Index() {
             <div className="space-y-6 animate-fade-in">
 
               {/* Hero */}
-              <div className="relative rounded-2xl overflow-hidden p-7 flex items-center justify-between"
+              <div className="relative rounded-2xl overflow-hidden p-5 md:p-7 flex flex-col md:flex-row items-start md:items-center justify-between gap-4"
                 style={{ background: "linear-gradient(135deg, rgba(247,37,133,0.2), rgba(255,107,53,0.15), rgba(168,85,247,0.1))", border: "1px solid rgba(247,37,133,0.3)" }}>
                 <div>
                   <div className="flex items-center gap-2 mb-2">
                     <span className="text-xs font-semibold text-pink-400 bg-pink-500/15 border border-pink-500/30 px-2.5 py-1 rounded-full">Агрегатор</span>
                   </div>
-                  <h2 className="font-montserrat font-bold text-2xl text-white mb-1">Отправь музыку на все площадки</h2>
+                  <h2 className="font-montserrat font-bold text-xl md:text-2xl text-white mb-1">Отправь музыку на все площадки</h2>
                   <p className="text-white/50 text-sm max-w-md">Твои треки появятся в Spotify, Яндекс Музыке, Apple Music и ещё 50+ сервисах через партнёрский агрегатор DistroKid</p>
                 </div>
                 <a
                   href="https://distrokid.com"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="px-6 py-3 rounded-xl text-white font-semibold flex items-center gap-2 flex-shrink-0 transition-all hover:opacity-90"
+                  className="w-full md:w-auto px-6 py-3 rounded-xl text-white font-semibold flex items-center justify-center gap-2 flex-shrink-0 transition-all hover:opacity-90"
                   style={{ background: "linear-gradient(135deg, #f72585, #ff6b35)" }}
                 >
                   <Icon name="Send" size={18} />
@@ -549,7 +581,7 @@ export default function Index() {
               {/* Platforms grid */}
               <div>
                 <h3 className="font-montserrat font-bold text-white mb-4">Поддерживаемые площадки</h3>
-                <div className="grid grid-cols-4 gap-3">
+                <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
                   {[
                     { name: "Spotify", icon: "🎵", status: "active", color: "from-green-600/20 to-green-600/5", border: "border-green-500/20", badge: "Активно", badgeColor: "text-green-400 bg-green-500/15" },
                     { name: "Яндекс Музыка", icon: "🎶", status: "active", color: "from-yellow-600/20 to-yellow-600/5", border: "border-yellow-500/20", badge: "Активно", badgeColor: "text-yellow-400 bg-yellow-500/15" },
@@ -805,6 +837,27 @@ export default function Index() {
 
         </div>
       </main>
+
+      {/* Нижний таббар — только мобильные */}
+      <nav className="md:hidden fixed bottom-0 left-0 right-0 z-20 border-t border-border/50 backdrop-blur-xl bg-background/90">
+        <div className="flex items-stretch">
+          {navItems.map((item) => (
+            <button
+              key={item.id}
+              onClick={() => setActivePage(item.id)}
+              className={`flex-1 flex flex-col items-center justify-center gap-1 py-3 transition-all duration-200 ${
+                activePage === item.id ? "text-purple-400" : "text-white/30"
+              }`}
+            >
+              <Icon name={item.icon} size={20} />
+              <span className="text-[10px] font-medium">{item.label}</span>
+              {activePage === item.id && (
+                <div className="absolute bottom-0 w-6 h-0.5 bg-gradient-to-r from-purple-500 to-cyan-400 rounded-full" />
+              )}
+            </button>
+          ))}
+        </div>
+      </nav>
     </div>
   );
 }
