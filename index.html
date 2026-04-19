@@ -28,6 +28,22 @@
 
     <meta name="pp-name" value="venok-music-distribution">
       <script src="https://cdn.poehali.dev/intertnal/js/inspector-min.js"></script>
+
+    <!-- PWA -->
+    <link rel="manifest" href="/manifest.json">
+    <meta name="theme-color" content="#a855f7">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="VENOK">
+    <link rel="apple-touch-icon" href="https://cdn.poehali.dev/projects/19d147bb-c4e6-4eb2-afb8-de91f57ffb26/files/07284309-93ae-487c-8036-c6001852a979.jpg">
+    <script>
+      if ('serviceWorker' in navigator) {
+        window.addEventListener('load', function() {
+          navigator.serviceWorker.register('/sw.js');
+        });
+      }
+    </script>
   </head>
 
 <body>

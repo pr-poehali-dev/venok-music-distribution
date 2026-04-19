@@ -1,0 +1,27 @@
+{
+  "name": "VENOK — Платформа для музыкантов",
+  "short_name": "VENOK",
+  "description": "Управляй своей музыкой, выпускай треки на площадках",
+  "start_url": "/",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#0a0810",
+  "theme_color": "#a855f7",
+  "lang": "ru",
+  "icons": [
+    {
+      "src": "https://cdn.poehali.dev/projects/19d147bb-c4e6-4eb2-afb8-de91f57ffb26/files/07284309-93ae-487c-8036-c6001852a979.jpg",
+      "sizes": "192x192",
+      "type": "image/jpeg",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "https://cdn.poehali.dev/projects/19d147bb-c4e6-4eb2-afb8-de91f57ffb26/files/07284309-93ae-487c-8036-c6001852a979.jpg",
+      "sizes": "512x512",
+      "type": "image/jpeg",
+      "purpose": "any maskable"
+    }
+  ],
+  "categories": ["music", "entertainment"],
+  "screenshots": []
+}
