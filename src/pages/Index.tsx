@@ -1,7 +1,7 @@
 import { useState, useRef } from "react";
 import Icon from "@/components/ui/icon";
 
-type Page = "profile" | "music" | "settings" | "help";
+type Page = "profile" | "music" | "distribution" | "settings" | "help";
 
 const ARTIST_IMAGE = "https://cdn.poehali.dev/projects/19d147bb-c4e6-4eb2-afb8-de91f57ffb26/files/90a9867e-752d-4283-8dc2-da9c7f91ed79.jpg";
 
@@ -186,6 +186,7 @@ export default function Index() {
   const navItems: { id: Page; label: string; icon: string }[] = [
     { id: "profile", label: "Профиль", icon: "User" },
     { id: "music", label: "Музыка", icon: "Music" },
+    { id: "distribution", label: "Дистрибуция", icon: "Globe" },
     { id: "settings", label: "Настройки", icon: "Settings" },
     { id: "help", label: "Справка", icon: "HelpCircle" },
   ];
@@ -257,6 +258,7 @@ export default function Index() {
           <h1 className="font-montserrat font-bold text-xl text-white">
             {activePage === "profile" && "Профиль исполнителя"}
             {activePage === "music" && "Управление музыкой"}
+            {activePage === "distribution" && "Дистрибуция"}
             {activePage === "settings" && "Настройки аккаунта"}
             {activePage === "help" && "Справка и поддержка"}
           </h1>
@@ -515,6 +517,114 @@ export default function Index() {
                   </button>
                 </div>
               )}
+            </div>
+          )}
+
+          {/* ===== DISTRIBUTION ===== */}
+          {activePage === "distribution" && (
+            <div className="space-y-6 animate-fade-in">
+
+              {/* Hero */}
+              <div className="relative rounded-2xl overflow-hidden p-7 flex items-center justify-between"
+                style={{ background: "linear-gradient(135deg, rgba(247,37,133,0.2), rgba(255,107,53,0.15), rgba(168,85,247,0.1))", border: "1px solid rgba(247,37,133,0.3)" }}>
+                <div>
+                  <div className="flex items-center gap-2 mb-2">
+                    <span className="text-xs font-semibold text-pink-400 bg-pink-500/15 border border-pink-500/30 px-2.5 py-1 rounded-full">Агрегатор</span>
+                  </div>
+                  <h2 className="font-montserrat font-bold text-2xl text-white mb-1">Отправь музыку на все площадки</h2>
+                  <p className="text-white/50 text-sm max-w-md">Твои треки появятся в Spotify, Яндекс Музыке, Apple Music и ещё 50+ сервисах через партнёрский агрегатор DistroKid</p>
+                </div>
+                <a
+                  href="https://distrokid.com"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="px-6 py-3 rounded-xl text-white font-semibold flex items-center gap-2 flex-shrink-0 transition-all hover:opacity-90"
+                  style={{ background: "linear-gradient(135deg, #f72585, #ff6b35)" }}
+                >
+                  <Icon name="Send" size={18} />
+                  Подключить дистрибуцию
+                </a>
+              </div>
+
+              {/* Platforms grid */}
+              <div>
+                <h3 className="font-montserrat font-bold text-white mb-4">Поддерживаемые площадки</h3>
+                <div className="grid grid-cols-4 gap-3">
+                  {[
+                    { name: "Spotify", icon: "🎵", status: "active", color: "from-green-600/20 to-green-600/5", border: "border-green-500/20", badge: "Активно", badgeColor: "text-green-400 bg-green-500/15" },
+                    { name: "Яндекс Музыка", icon: "🎶", status: "active", color: "from-yellow-600/20 to-yellow-600/5", border: "border-yellow-500/20", badge: "Активно", badgeColor: "text-yellow-400 bg-yellow-500/15" },
+                    { name: "Apple Music", icon: "🍎", status: "active", color: "from-pink-600/20 to-pink-600/5", border: "border-pink-500/20", badge: "Активно", badgeColor: "text-pink-400 bg-pink-500/15" },
+                    { name: "VK Музыка", icon: "💙", status: "pending", color: "from-blue-600/20 to-blue-600/5", border: "border-blue-500/20", badge: "Ожидание", badgeColor: "text-blue-300 bg-blue-500/15" },
+                    { name: "YouTube Music", icon: "▶️", status: "active", color: "from-red-600/20 to-red-600/5", border: "border-red-500/20", badge: "Активно", badgeColor: "text-red-400 bg-red-500/15" },
+                    { name: "TikTok", icon: "🎤", status: "pending", color: "from-purple-600/20 to-purple-600/5", border: "border-purple-500/20", badge: "Ожидание", badgeColor: "text-purple-300 bg-purple-500/15" },
+                    { name: "Deezer", icon: "🎧", status: "inactive", color: "from-orange-600/20 to-orange-600/5", border: "border-orange-500/15", badge: "Подключить", badgeColor: "text-orange-400 bg-orange-500/10" },
+                    { name: "SoundCloud", icon: "☁️", status: "inactive", color: "from-orange-500/15 to-orange-500/5", border: "border-orange-400/15", badge: "Подключить", badgeColor: "text-orange-300 bg-orange-500/10" },
+                    { name: "Amazon Music", icon: "📦", status: "inactive", color: "from-cyan-600/20 to-cyan-600/5", border: "border-cyan-500/15", badge: "Подключить", badgeColor: "text-cyan-400 bg-cyan-500/10" },
+                    { name: "Tidal", icon: "🌊", status: "inactive", color: "from-indigo-600/20 to-indigo-600/5", border: "border-indigo-500/15", badge: "Подключить", badgeColor: "text-indigo-300 bg-indigo-500/10" },
+                    { name: "Boom", icon: "💥", status: "inactive", color: "from-purple-600/15 to-pink-600/5", border: "border-purple-500/15", badge: "Подключить", badgeColor: "text-purple-300 bg-purple-500/10" },
+                    { name: "+50 других", icon: "✨", status: "inactive", color: "from-white/5 to-transparent", border: "border-white/10", badge: "В агрегаторе", badgeColor: "text-white/40 bg-white/5" },
+                  ].map((p) => (
+                    <div key={p.name} className={`card-glass rounded-2xl p-4 bg-gradient-to-br ${p.color} border ${p.border} flex flex-col gap-3 hover:scale-[1.02] transition-transform duration-200`}>
+                      <div className="flex items-center justify-between">
+                        <span className="text-2xl">{p.icon}</span>
+                        <span className={`text-xs px-2 py-0.5 rounded-full font-medium ${p.badgeColor}`}>{p.badge}</span>
+                      </div>
+                      <p className="font-montserrat font-semibold text-sm text-white">{p.name}</p>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              {/* Tracks distribution status */}
+              <div>
+                <h3 className="font-montserrat font-bold text-white mb-4">Статус треков</h3>
+                <div className="card-glass rounded-2xl overflow-hidden neon-border">
+                  <div className="grid grid-cols-[1fr_5rem_8rem_6rem] gap-4 px-6 py-3 text-xs font-semibold text-white/20 uppercase tracking-widest border-b border-white/5">
+                    <span>Трек</span><span>Площадки</span><span>Статус</span><span>Действие</span>
+                  </div>
+                  {tracks.map((track) => {
+                    const statuses = [
+                      { label: "Активен", color: "text-green-400 bg-green-500/15" },
+                      { label: "На модерации", color: "text-yellow-400 bg-yellow-500/15" },
+                      { label: "Не опубликован", color: "text-white/30 bg-white/5" },
+                    ];
+                    const s = statuses[track.id % 3];
+                    return (
+                      <div key={track.id} className="track-row grid grid-cols-[1fr_5rem_8rem_6rem] gap-4 px-6 py-4 items-center border-b border-white/3 last:border-0">
+                        <div className="flex items-center gap-3 min-w-0">
+                          <div className="w-9 h-9 rounded-lg bg-gradient-to-br from-pink-600 to-orange-500 flex items-center justify-center flex-shrink-0">
+                            <Icon name="Music2" size={14} className="text-white" />
+                          </div>
+                          <div className="min-w-0">
+                            <p className="text-sm font-medium text-white truncate">{track.title}</p>
+                            <p className="text-xs text-white/30">{track.album}</p>
+                          </div>
+                        </div>
+                        <span className="text-sm text-white/50">{track.id % 3 === 2 ? "—" : "7 из 12"}</span>
+                        <span className={`text-xs px-2.5 py-1 rounded-full font-medium w-fit ${s.color}`}>{s.label}</span>
+                        <button className="text-xs text-purple-400 hover:text-purple-300 transition-colors">
+                          {track.id % 3 === 2 ? "Опубликовать" : "Подробнее"}
+                        </button>
+                      </div>
+                    );
+                  })}
+                </div>
+              </div>
+
+              {/* CTA Banner */}
+              <div className="card-glass rounded-2xl p-6 text-center neon-border">
+                <p className="text-white/50 text-sm mb-1">Нет аккаунта у агрегатора?</p>
+                <p className="font-montserrat font-bold text-white text-lg mb-4">Зарегистрируйся в DistroKid и получи скидку 7%</p>
+                <a
+                  href="https://distrokid.com/vip/seven/venok"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center gap-2 px-6 py-2.5 rounded-xl bg-gradient-to-r from-pink-600 to-orange-500 text-white text-sm font-semibold hover:opacity-90 transition-opacity"
+                >
+                  <Icon name="ExternalLink" size={16} />
+                  Перейти на DistroKid
+                </a>
+              </div>
             </div>
           )}
 
