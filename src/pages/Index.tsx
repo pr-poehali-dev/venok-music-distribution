@@ -175,6 +175,164 @@ const WaveformIcon = ({ isActive }: { isActive: boolean }) => (
   </div>
 );
 
+// ===== SUBSCRIPTION MODAL =====
+function SubscribeModal({ onClose, onSuccess }: { onClose: () => void; onSuccess: () => void }) {
+  const [step, setStep] = useState<"plan" | "pay" | "done">("plan");
+  const [cardNum, setCardNum] = useState("");
+  const [expiry, setExpiry] = useState("");
+  const [cvv, setCvv] = useState("");
+
+  const formatCard = (v: string) => v.replace(/\D/g, "").slice(0, 16).replace(/(.{4})/g, "$1 ").trim();
+  const formatExpiry = (v: string) => {
+    const d = v.replace(/\D/g, "").slice(0, 4);
+    return d.length > 2 ? d.slice(0, 2) + "/" + d.slice(2) : d;
+  };
+
+  const handlePay = () => {
+    setStep("done");
+    setTimeout(() => { onSuccess(); onClose(); }, 2000);
+  };
+
+  return (
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+      <div className="absolute inset-0 bg-black/80 backdrop-blur-sm" onClick={onClose} />
+      <div className="relative w-full max-w-md card-glass rounded-2xl neon-border p-6 animate-fade-in">
+
+        {step === "plan" && (
+          <>
+            <div className="flex items-center justify-between mb-6">
+              <h2 className="font-montserrat font-bold text-xl text-white">Подписка VENOK Pro</h2>
+              <button onClick={onClose} className="w-8 h-8 rounded-lg bg-white/5 hover:bg-white/10 flex items-center justify-center transition-colors">
+                <Icon name="X" size={16} className="text-white/50" />
+              </button>
+            </div>
+
+            {/* Plan card */}
+            <div className="relative rounded-2xl p-5 mb-5 overflow-hidden"
+              style={{ background: "linear-gradient(135deg, rgba(168,85,247,0.25), rgba(0,255,255,0.1))", border: "1px solid rgba(168,85,247,0.4)" }}>
+              <div className="absolute top-3 right-3 text-xs font-bold text-purple-300 bg-purple-500/20 px-2.5 py-1 rounded-full border border-purple-500/30">Популярный</div>
+              <div className="flex items-end gap-2 mb-4">
+                <span className="font-montserrat font-black text-4xl text-white">500 ₽</span>
+                <span className="text-white/40 text-sm mb-1">/ месяц</span>
+              </div>
+              <ul className="space-y-2.5">
+                {[
+                  "Выпуск музыки на 50+ площадках",
+                  "Spotify, Apple Music, Яндекс, VK...",
+                  "Неограниченное количество треков",
+                  "Статистика и аналитика",
+                  "Приоритетная поддержка",
+                ].map((f) => (
+                  <li key={f} className="flex items-center gap-2.5 text-sm text-white/80">
+                    <div className="w-4 h-4 rounded-full bg-purple-500/30 flex items-center justify-center flex-shrink-0">
+                      <Icon name="Check" size={10} className="text-purple-300" />
+                    </div>
+                    {f}
+                  </li>
+                ))}
+              </ul>
+            </div>
+
+            {/* Free plan */}
+            <div className="rounded-2xl p-4 mb-5 border border-white/8 bg-white/3">
+              <p className="text-sm font-semibold text-white/50 mb-2">Бесплатный тариф</p>
+              <ul className="space-y-1.5">
+                {["Профиль исполнителя", "Загрузка треков в библиотеку", "❌ Дистрибуция на площадки"].map((f) => (
+                  <li key={f} className="text-xs text-white/30">{f}</li>
+                ))}
+              </ul>
+            </div>
+
+            <button
+              onClick={() => setStep("pay")}
+              className="w-full py-3 rounded-xl bg-gradient-to-r from-purple-600 to-cyan-500 text-white font-semibold btn-glow"
+            >
+              Оформить подписку — 500 ₽/мес
+            </button>
+          </>
+        )}
+
+        {step === "pay" && (
+          <>
+            <div className="flex items-center gap-3 mb-6">
+              <button onClick={() => setStep("plan")} className="w-8 h-8 rounded-lg bg-white/5 hover:bg-white/10 flex items-center justify-center transition-colors">
+                <Icon name="ArrowLeft" size={16} className="text-white/50" />
+              </button>
+              <h2 className="font-montserrat font-bold text-xl text-white">Оплата</h2>
+            </div>
+
+            {/* Amount */}
+            <div className="flex items-center justify-between p-4 rounded-xl bg-white/5 border border-white/10 mb-5">
+              <span className="text-sm text-white/60">VENOK Pro · 1 месяц</span>
+              <span className="font-montserrat font-bold text-white">500 ₽</span>
+            </div>
+
+            {/* Card form */}
+            <div className="space-y-4 mb-5">
+              <div>
+                <label className="text-xs text-white/40 font-semibold uppercase tracking-widest mb-2 block">Номер карты</label>
+                <div className="relative">
+                  <input
+                    value={cardNum}
+                    onChange={(e) => setCardNum(formatCard(e.target.value))}
+                    placeholder="0000 0000 0000 0000"
+                    className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-sm text-white focus:outline-none focus:border-purple-500/60 transition-all placeholder:text-white/20 pr-10"
+                  />
+                  <Icon name="CreditCard" size={16} className="absolute right-3 top-1/2 -translate-y-1/2 text-white/20" />
+                </div>
+              </div>
+              <div className="grid grid-cols-2 gap-3">
+                <div>
+                  <label className="text-xs text-white/40 font-semibold uppercase tracking-widest mb-2 block">Срок действия</label>
+                  <input
+                    value={expiry}
+                    onChange={(e) => setExpiry(formatExpiry(e.target.value))}
+                    placeholder="ММ/ГГ"
+                    className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-sm text-white focus:outline-none focus:border-purple-500/60 transition-all placeholder:text-white/20"
+                  />
+                </div>
+                <div>
+                  <label className="text-xs text-white/40 font-semibold uppercase tracking-widest mb-2 block">CVV</label>
+                  <input
+                    value={cvv}
+                    onChange={(e) => setCvv(e.target.value.replace(/\D/g, "").slice(0, 3))}
+                    placeholder="•••"
+                    type="password"
+                    className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-sm text-white focus:outline-none focus:border-purple-500/60 transition-all placeholder:text-white/20"
+                  />
+                </div>
+              </div>
+            </div>
+
+            <button
+              onClick={handlePay}
+              disabled={cardNum.length < 19 || expiry.length < 5 || cvv.length < 3}
+              className={`w-full py-3 rounded-xl font-semibold transition-all ${
+                cardNum.length >= 19 && expiry.length >= 5 && cvv.length >= 3
+                  ? "bg-gradient-to-r from-purple-600 to-cyan-500 text-white btn-glow"
+                  : "bg-white/5 text-white/20 cursor-not-allowed"
+              }`}
+            >
+              Оплатить 500 ₽
+            </button>
+            <p className="text-center text-xs text-white/20 mt-3">🔒 Платёж защищён SSL-шифрованием</p>
+          </>
+        )}
+
+        {step === "done" && (
+          <div className="py-8 flex flex-col items-center gap-4 text-center">
+            <div className="w-16 h-16 rounded-full bg-green-500/20 flex items-center justify-center animate-pulse-ring">
+              <Icon name="CheckCircle" size={32} className="text-green-400" />
+            </div>
+            <h2 className="font-montserrat font-bold text-xl text-white">Подписка активирована!</h2>
+            <p className="text-white/50 text-sm">Теперь тебе доступна дистрибуция на все площадки</p>
+          </div>
+        )}
+      </div>
+    </div>
+  );
+}
+
 export default function Index() {
   const [activePage, setActivePage] = useState<Page>("profile");
   const [playingTrack, setPlayingTrack] = useState<number | null>(1);
@@ -182,6 +340,8 @@ export default function Index() {
   const [musicTab, setMusicTab] = useState<"tracks" | "albums" | "playlists">("tracks");
   const [settingsTab, setSettingsTab] = useState<"account" | "notifications" | "privacy">("account");
   const [uploadOpen, setUploadOpen] = useState(false);
+  const [isPro, setIsPro] = useState(false);
+  const [subscribeOpen, setSubscribeOpen] = useState(false);
 
   const navItems: { id: Page; label: string; icon: string }[] = [
     { id: "profile", label: "Профиль", icon: "User" },
@@ -194,6 +354,7 @@ export default function Index() {
   return (
     <div className="min-h-screen mesh-bg bg-background flex">
       {uploadOpen && <UploadModal onClose={() => setUploadOpen(false)} />}
+      {subscribeOpen && <SubscribeModal onClose={() => setSubscribeOpen(false)} onSuccess={() => setIsPro(true)} />}
 
       {/* Sidebar — только десктоп */}
       <aside className="hidden md:flex w-64 flex-shrink-0 flex-col border-r border-border/50 relative">
@@ -227,6 +388,24 @@ export default function Index() {
             </button>
           ))}
         </nav>
+
+        {/* Pro badge / upgrade */}
+        <div className="px-4 pb-3">
+          {isPro ? (
+            <div className="flex items-center gap-2 px-3 py-2 rounded-xl bg-purple-500/10 border border-purple-500/20">
+              <Icon name="Sparkles" size={14} className="text-purple-400" />
+              <span className="text-xs font-semibold text-purple-300">Pro активен</span>
+            </div>
+          ) : (
+            <button
+              onClick={() => setSubscribeOpen(true)}
+              className="w-full flex items-center gap-2 px-3 py-2 rounded-xl bg-gradient-to-r from-purple-600/20 to-cyan-500/10 border border-purple-500/30 hover:border-purple-500/60 transition-all group"
+            >
+              <Icon name="Zap" size={14} className="text-yellow-400" />
+              <span className="text-xs font-semibold text-white/70 group-hover:text-white transition-colors">Получить Pro — 500 ₽/мес</span>
+            </button>
+          )}
+        </div>
 
         {/* Mini Player */}
         <div className="p-4 border-t border-border/50">
@@ -301,7 +480,7 @@ export default function Index() {
                     <div>
                       <div className="flex items-center gap-2 mb-1">
                         <h2 className="font-montserrat font-bold text-3xl text-white">NOVA</h2>
-                        <span className="text-xs bg-purple-500/30 text-purple-300 border border-purple-500/40 px-2 py-0.5 rounded-full font-medium">Pro</span>
+                        {isPro && <span className="text-xs bg-purple-500/30 text-purple-300 border border-purple-500/40 px-2 py-0.5 rounded-full font-medium flex items-center gap-1"><Icon name="Sparkles" size={10} />Pro</span>}
                       </div>
                       <p className="text-white/60 text-sm">Электронная музыка · Москва</p>
                       <div className="flex items-center gap-4 mt-2">
@@ -325,7 +504,7 @@ export default function Index() {
                   <div className="text-center">
                     <div className="flex items-center justify-center gap-2 mb-1">
                       <h2 className="font-montserrat font-bold text-2xl text-white">NOVA</h2>
-                      <span className="text-xs bg-purple-500/30 text-purple-300 border border-purple-500/40 px-2 py-0.5 rounded-full">Pro</span>
+                      {isPro && <span className="text-xs bg-purple-500/30 text-purple-300 border border-purple-500/40 px-2 py-0.5 rounded-full">Pro</span>}
                     </div>
                     <p className="text-white/60 text-sm">Электронная музыка · Москва</p>
                   </div>
@@ -554,7 +733,7 @@ export default function Index() {
 
           {/* ===== DISTRIBUTION ===== */}
           {activePage === "distribution" && (
-            <div className="space-y-6 animate-fade-in">
+            <div className="space-y-6 animate-fade-in relative">
 
               {/* Hero */}
               <div className="relative rounded-2xl overflow-hidden p-5 md:p-7 flex flex-col md:flex-row items-start md:items-center justify-between gap-4"
@@ -657,6 +836,33 @@ export default function Index() {
                   Перейти на DistroKid
                 </a>
               </div>
+
+              {/* PAYWALL — накрывает весь раздел если нет Pro */}
+              {!isPro && (
+                <div className="absolute inset-0 rounded-2xl flex items-center justify-center z-10"
+                  style={{ backdropFilter: "blur(12px)", background: "rgba(10,8,20,0.75)" }}>
+                  <div className="text-center px-6 max-w-sm animate-fade-in">
+                    <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-purple-600 to-cyan-500 flex items-center justify-center mx-auto mb-4 shadow-2xl shadow-purple-500/40">
+                      <Icon name="Lock" size={28} className="text-white" />
+                    </div>
+                    <h3 className="font-montserrat font-bold text-2xl text-white mb-2">Только для Pro</h3>
+                    <p className="text-white/50 text-sm leading-relaxed mb-6">
+                      Выпускай музыку на Spotify, Яндекс Музыке, Apple Music и 50+ площадках. Подписка даёт полный доступ к дистрибуции.
+                    </p>
+                    <div className="flex items-end justify-center gap-1 mb-5">
+                      <span className="font-montserrat font-black text-4xl gradient-text">500 ₽</span>
+                      <span className="text-white/40 text-sm mb-1">/ месяц</span>
+                    </div>
+                    <button
+                      onClick={() => setSubscribeOpen(true)}
+                      className="w-full py-3 rounded-xl bg-gradient-to-r from-purple-600 to-cyan-500 text-white font-semibold btn-glow text-sm"
+                    >
+                      Подключить Pro
+                    </button>
+                    <p className="text-xs text-white/20 mt-3">Отмена в любое время</p>
+                  </div>
+                </div>
+              )}
             </div>
           )}
 
@@ -714,6 +920,47 @@ export default function Index() {
                     <button className="px-6 py-2.5 rounded-xl bg-gradient-to-r from-purple-600 to-cyan-500 text-white text-sm font-semibold btn-glow">
                       Сохранить
                     </button>
+                  </div>
+
+                  {/* Подписка */}
+                  <div className={`card-glass rounded-2xl p-6 ${isPro ? "border border-purple-500/30 bg-purple-500/5" : "neon-border"}`}>
+                    <div className="flex items-center justify-between mb-4">
+                      <div>
+                        <h3 className="font-montserrat font-bold text-white">Подписка</h3>
+                        <p className="text-xs text-white/40 mt-0.5">{isPro ? "Pro — активна" : "Бесплатный тариф"}</p>
+                      </div>
+                      {isPro
+                        ? <span className="flex items-center gap-1 text-xs font-semibold text-purple-300 bg-purple-500/15 border border-purple-500/30 px-3 py-1 rounded-full"><Icon name="Sparkles" size={12} />Pro</span>
+                        : <span className="text-xs text-white/30 bg-white/5 px-3 py-1 rounded-full">Free</span>
+                      }
+                    </div>
+                    {isPro ? (
+                      <div className="space-y-2 mb-4">
+                        <div className="flex items-center justify-between text-sm">
+                          <span className="text-white/50">Следующее списание</span>
+                          <span className="text-white">19 мая 2026</span>
+                        </div>
+                        <div className="flex items-center justify-between text-sm">
+                          <span className="text-white/50">Сумма</span>
+                          <span className="text-white">500 ₽/мес</span>
+                        </div>
+                      </div>
+                    ) : (
+                      <p className="text-sm text-white/40 mb-4">Подключи Pro чтобы выпускать музыку на 50+ площадках</p>
+                    )}
+                    {!isPro && (
+                      <button
+                        onClick={() => setSubscribeOpen(true)}
+                        className="w-full py-2.5 rounded-xl bg-gradient-to-r from-purple-600 to-cyan-500 text-white text-sm font-semibold btn-glow"
+                      >
+                        Подключить Pro — 500 ₽/мес
+                      </button>
+                    )}
+                    {isPro && (
+                      <button className="text-xs text-white/30 hover:text-white/50 transition-colors">
+                        Отменить подписку
+                      </button>
+                    )}
                   </div>
 
                   <div className="card-glass rounded-2xl p-6 border border-red-500/20 bg-red-500/5">
