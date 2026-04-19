@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useRef } from "react";
 import Icon from "@/components/ui/icon";
 
 type Page = "profile" | "music" | "settings" | "help";
@@ -32,6 +32,128 @@ const faqItems = [
   { q: "Как настроить права на треки?", a: "В настройках каждого трека можно задать лицензию, запретить скачивание или ограничить регион прослушивания." },
 ];
 
+// ===== UPLOAD MODAL =====
+function UploadModal({ onClose }: { onClose: () => void }) {
+  const fileInputRef = useRef<HTMLInputElement>(null);
+  const [dragOver, setDragOver] = useState(false);
+  const [file, setFile] = useState<File | null>(null);
+  const [title, setTitle] = useState("");
+  const [genre, setGenre] = useState("");
+
+  const handleFile = (f: File) => {
+    setFile(f);
+    if (!title) setTitle(f.name.replace(/\.[^.]+$/, ""));
+  };
+
+  const handleDrop = (e: React.DragEvent) => {
+    e.preventDefault();
+    setDragOver(false);
+    const f = e.dataTransfer.files[0];
+    if (f) handleFile(f);
+  };
+
+  return (
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+      <div className="absolute inset-0 bg-black/70 backdrop-blur-sm" onClick={onClose} />
+      <div className="relative w-full max-w-lg card-glass rounded-2xl neon-border p-6 animate-fade-in">
+        {/* Header */}
+        <div className="flex items-center justify-between mb-6">
+          <h2 className="font-montserrat font-bold text-xl text-white">Загрузить трек</h2>
+          <button onClick={onClose} className="w-8 h-8 rounded-lg bg-white/5 hover:bg-white/10 flex items-center justify-center transition-colors">
+            <Icon name="X" size={16} className="text-white/50" />
+          </button>
+        </div>
+
+        {/* Drop zone */}
+        <div
+          onClick={() => fileInputRef.current?.click()}
+          onDragOver={(e) => { e.preventDefault(); setDragOver(true); }}
+          onDragLeave={() => setDragOver(false)}
+          onDrop={handleDrop}
+          className={`relative rounded-xl border-2 border-dashed p-8 text-center cursor-pointer transition-all duration-200 mb-5 ${
+            dragOver
+              ? "border-purple-500 bg-purple-500/10"
+              : file
+              ? "border-green-500/50 bg-green-500/5"
+              : "border-white/15 bg-white/3 hover:border-purple-500/50 hover:bg-purple-500/5"
+          }`}
+        >
+          <input
+            ref={fileInputRef}
+            type="file"
+            accept=".mp3,.wav,.flac,.aac,.ogg"
+            className="hidden"
+            onChange={(e) => { const f = e.target.files?.[0]; if (f) handleFile(f); }}
+          />
+          {file ? (
+            <div className="flex flex-col items-center gap-2">
+              <div className="w-12 h-12 rounded-full bg-green-500/20 flex items-center justify-center">
+                <Icon name="CheckCircle" size={24} className="text-green-400" />
+              </div>
+              <p className="text-sm font-medium text-white">{file.name}</p>
+              <p className="text-xs text-white/40">{(file.size / 1024 / 1024).toFixed(1)} MB</p>
+            </div>
+          ) : (
+            <div className="flex flex-col items-center gap-3">
+              <div className="w-12 h-12 rounded-full bg-purple-500/15 flex items-center justify-center">
+                <Icon name="Upload" size={22} className="text-purple-400" />
+              </div>
+              <div>
+                <p className="text-sm font-medium text-white">Перетащите файл или нажмите для выбора</p>
+                <p className="text-xs text-white/30 mt-1">MP3, WAV, FLAC, AAC · до 500 MB</p>
+              </div>
+            </div>
+          )}
+        </div>
+
+        {/* Fields */}
+        <div className="space-y-4 mb-6">
+          <div>
+            <label className="text-xs text-white/40 font-semibold uppercase tracking-widest mb-2 block">Название трека</label>
+            <input
+              type="text"
+              value={title}
+              onChange={(e) => setTitle(e.target.value)}
+              placeholder="Введите название..."
+              className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-2.5 text-sm text-white focus:outline-none focus:border-purple-500/60 transition-all placeholder:text-white/20"
+            />
+          </div>
+          <div>
+            <label className="text-xs text-white/40 font-semibold uppercase tracking-widest mb-2 block">Жанр</label>
+            <select
+              value={genre}
+              onChange={(e) => setGenre(e.target.value)}
+              className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-2.5 text-sm text-white focus:outline-none focus:border-purple-500/60 transition-all"
+            >
+              <option value="" className="bg-gray-900">Выберите жанр...</option>
+              {["Электро", "Поп", "Синти-поп", "Эмбиент", "Рок", "Хип-хоп", "Джаз", "Классика"].map(g => (
+                <option key={g} value={g} className="bg-gray-900">{g}</option>
+              ))}
+            </select>
+          </div>
+        </div>
+
+        {/* Actions */}
+        <div className="flex gap-3">
+          <button onClick={onClose} className="flex-1 py-2.5 rounded-xl bg-white/5 hover:bg-white/10 text-sm text-white/60 transition-colors">
+            Отмена
+          </button>
+          <button
+            disabled={!file || !title}
+            className={`flex-1 py-2.5 rounded-xl text-sm font-semibold transition-all ${
+              file && title
+                ? "bg-gradient-to-r from-purple-600 to-cyan-500 text-white btn-glow"
+                : "bg-white/5 text-white/20 cursor-not-allowed"
+            }`}
+          >
+            Загрузить трек
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+}
+
 const WaveformIcon = ({ isActive }: { isActive: boolean }) => (
   <div className="flex items-end gap-0.5 h-5">
     {[3, 5, 4, 7, 3, 6, 4].map((h, i) => (
@@ -59,6 +181,7 @@ export default function Index() {
   const [openFaq, setOpenFaq] = useState<number | null>(null);
   const [musicTab, setMusicTab] = useState<"tracks" | "albums" | "playlists">("tracks");
   const [settingsTab, setSettingsTab] = useState<"account" | "notifications" | "privacy">("account");
+  const [uploadOpen, setUploadOpen] = useState(false);
 
   const navItems: { id: Page; label: string; icon: string }[] = [
     { id: "profile", label: "Профиль", icon: "User" },
@@ -69,6 +192,7 @@ export default function Index() {
 
   return (
     <div className="min-h-screen mesh-bg bg-background flex">
+      {uploadOpen && <UploadModal onClose={() => setUploadOpen(false)} />}
 
       {/* Sidebar */}
       <aside className="w-64 flex-shrink-0 flex flex-col border-r border-border/50 relative">
@@ -275,7 +399,10 @@ export default function Index() {
                   <h2 className="font-montserrat font-bold text-2xl text-white mb-1">Загрузить новый трек</h2>
                   <p className="text-white/50 text-sm">MP3, WAV, FLAC · до 500 MB</p>
                 </div>
-                <button className="px-6 py-3 rounded-xl bg-gradient-to-r from-purple-600 to-cyan-500 text-white font-semibold btn-glow flex items-center gap-2">
+                <button
+                  onClick={() => setUploadOpen(true)}
+                  className="px-6 py-3 rounded-xl bg-gradient-to-r from-purple-600 to-cyan-500 text-white font-semibold btn-glow flex items-center gap-2"
+                >
                   <Icon name="Upload" size={18} />
                   Загрузить
                 </button>
